@@ -1,5 +1,6 @@
 package ai.fullfillment_v2.inbound;
 
+import ai.fullfillment_v2.inbound.feature.CreateInbound;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

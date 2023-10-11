@@ -1,4 +1,4 @@
-package ai.fullfillment_v2.inbound;
+package ai.fullfillment_v2.inbound.domain;
 
 import org.springframework.util.Assert;
 

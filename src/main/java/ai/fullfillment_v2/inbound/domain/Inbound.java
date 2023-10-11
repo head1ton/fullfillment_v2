@@ -1,4 +1,4 @@
-package ai.fullfillment_v2.inbound;
+package ai.fullfillment_v2.inbound.domain;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
