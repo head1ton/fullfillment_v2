@@ -16,13 +16,18 @@ public class CreateInboundTest {
     @Test
     @DisplayName("입고 생성")
     public void createInbound() {
-        createInbound.request();
+        final CreateInbound.Request request = new CreateInbound.Request();
+        createInbound.request(request);
     }
 
     private class CreateInbound {
 
-        public void request() {
+        public void request(final Request request) {
             throw new UnsupportedOperationException("Unsupported request");
+        }
+
+        public record Request() {
+
         }
     }
 }
