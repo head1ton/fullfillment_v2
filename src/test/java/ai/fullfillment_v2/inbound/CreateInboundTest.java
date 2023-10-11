@@ -2,6 +2,7 @@ package ai.fullfillment_v2.inbound;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -124,8 +125,8 @@ public class CreateInboundTest {
     public class CreateInbound {
 
         public void request(final Request request) {
-            final Inbound inbound = request.toDomain();
             final List<InboundProduct> products = request.toProducts();
+            final Inbound inbound = request.toDomain();
             inbound.assignProducts(products);
         }
 
@@ -137,6 +138,7 @@ public class CreateInboundTest {
             @NotNull(message = "주문 요청일은 필수입니다.")
             LocalDateTime orderRequestedAt,
             String description,
+            @NotEmpty(message = "입고 상품은 필수입니다.")
             List<Product> inboundProducts) {
 
             public Inbound toDomain() {
