@@ -2,19 +2,30 @@ package ai.fullfillment_v2.inbound.feature;
 
 import ai.fullfillment_v2.inbound.domain.Inbound;
 import ai.fullfillment_v2.inbound.domain.InboundProduct;
+import ai.fullfillment_v2.inbound.domain.InboundRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
+@RequiredArgsConstructor
 public class CreateInbound {
 
+    private final InboundRepository inboundRepository;
+
+    @Transactional
     public void request(final Request request) {
         final List<InboundProduct> products = request.toProducts();
         final Inbound inbound = request.toDomain();
         inbound.assignProducts(products);
+
+        inboundRepository.save(inbound);
     }
 
     public record Request(
