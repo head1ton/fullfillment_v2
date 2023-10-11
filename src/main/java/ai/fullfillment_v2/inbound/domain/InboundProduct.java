@@ -69,4 +69,8 @@ public class InboundProduct {
         Assert.notNull(inbound, "입고는 필수입니다.");
         this.inbound = inbound;
     }
+
+    public void added() {
+        isAdded = true;
+    }
 }
