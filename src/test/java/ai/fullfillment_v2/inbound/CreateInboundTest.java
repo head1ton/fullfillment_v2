@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,6 +41,16 @@ public class CreateInboundTest {
         createInbound.request(request);
     }
 
+    public enum InboundStatus {
+        ORDER_REQUESTED("발주 요청");
+
+        private final String description;
+
+        InboundStatus(final String description) {
+            this.description = description;
+        }
+    }
+
     public static class InboundProduct {
 
         private final Long productNo;
@@ -49,6 +58,7 @@ public class CreateInboundTest {
         private final Long unitPrice;
         private final String description;
         private Inbound inbound;
+        private boolean isAdded;
 
         public InboundProduct(
             final Long productNo,
@@ -83,14 +93,14 @@ public class CreateInboundTest {
         private final LocalDateTime estimatedArrivalAt;
         private final LocalDateTime orderRequestedAt;
         private final String description;
-        private List<InboundProduct> inboundProducts = new ArrayList<>();
+        private final List<InboundProduct> inboundProducts = new ArrayList<>();
+        private final InboundStatus status;
 
         public Inbound(
             final String title,
             final LocalDateTime estimatedArrivalAt,
             final LocalDateTime orderRequestedAt,
-            final String description,
-            final List<InboundProduct> inboundProducts) {
+            final String description) {
             Assert.hasText(title, "입고 제목은 필수입니다.");
             Assert.notNull(estimatedArrivalAt, "입고 예정일은 필수입니다.");
             Assert.notNull(orderRequestedAt, "주문 요청일은 필수입니다.");
@@ -99,8 +109,15 @@ public class CreateInboundTest {
             this.estimatedArrivalAt = estimatedArrivalAt;
             this.orderRequestedAt = orderRequestedAt;
             this.description = description;
-            this.inboundProducts = inboundProducts;
-            inboundProducts.forEach(product -> product.assignInbound(this));
+            status = InboundStatus.ORDER_REQUESTED;
+        }
+
+        public void assignProducts(final List<InboundProduct> products) {
+            Assert.notEmpty(products, "입고 상품은 필수입니다.");
+            for (final InboundProduct product : products) {
+                product.assignInbound(this);
+                inboundProducts.add(product);
+            }
         }
     }
 
@@ -108,6 +125,8 @@ public class CreateInboundTest {
 
         public void request(final Request request) {
             final Inbound inbound = request.toDomain();
+            final List<InboundProduct> products = request.toProducts();
+            inbound.assignProducts(products);
         }
 
         public record Request(
@@ -125,11 +144,14 @@ public class CreateInboundTest {
                     title,
                     estimatedArrivalAt,
                     orderRequestedAt,
-                    description,
-                    inboundProducts.stream()
-                                   .map(Product::toDomain)
-                                   .collect(Collectors.toList())
+                    description
                 );
+            }
+
+            public List<InboundProduct> toProducts() {
+                return inboundProducts.stream()
+                                      .map(Product::toDomain)
+                                      .toList();
             }
 
             public record Product(
