@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class CreateInboundTest extends ApiTest {
 
     @Autowired
-    private CreateInbound createInbound;
-    @Autowired
     private InboundRepository inboundRepository;
 
     @Test
