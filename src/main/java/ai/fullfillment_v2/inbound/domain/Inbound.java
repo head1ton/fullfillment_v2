@@ -1,18 +1,51 @@
 package ai.fullfillment_v2.inbound.domain;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 import org.springframework.util.Assert;
 
+@Entity
+@Table(name = "inbound")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Inbound {
 
-    private final String title;
-    private final LocalDateTime estimatedArrivalAt;
-    private final LocalDateTime orderRequestedAt;
-    private final String description;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "inbound_no")
+    @Comment("입고 번호")
+    private Long inboundNo;
+    @Column(name = "title", nullable = false)
+    @Comment("입고명")
+    private String title;
+    @Column(name = "estimated_arrival_at", nullable = false)
+    @Comment("입고 예정일")
+    private LocalDateTime estimatedArrivalAt;
+    @Column(name = "order_requested_at", nullable = false)
+    @Comment("주문 요청일")
+    private LocalDateTime orderRequestedAt;
+    @Column(name = "description")
+    @Comment("입고 설명")
+    private String description;
+    @OneToMany(mappedBy = "inbound", orphanRemoval = true, cascade = CascadeType.ALL)
     private final List<InboundProduct> inboundProducts = new ArrayList<>();
-    private final InboundStatus status;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    @Comment("입고 상태")
+    private InboundStatus status;
 
     public Inbound(
         final String title,
