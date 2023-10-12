@@ -1,47 +1,52 @@
 package ai.fullfillment_v2.inbound.api;
 
 import ai.fullfillment_v2.common.Scenario;
-import ai.fullfillment_v2.inbound.feature.AddInboundProduct;
+import ai.fullfillment_v2.inbound.feature.UpdateInboundProduct;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
 
-public class AddInboundProductApi {
+public class UpdateInboundProductApi {
 
     private Long inboundNo = 1L;
+    private Long inboundProductNo = 1L;
     private Long productNo = 1L;
     private Long requestQuantity = 1_000L;
     private Long unitPrice = 15_000L;
-    private String description = "블랙핑크 3집 앨범[] - 미입고분 추가 입고";
+    private String description = "블랙핑크 입고 수정";
 
-    public AddInboundProductApi inboundNo(final Long inboundNo) {
+    public UpdateInboundProductApi inboundNo(final Long inboundNo) {
         this.inboundNo = inboundNo;
         return this;
     }
 
-    public AddInboundProductApi productNo(final Long productNo) {
+    public UpdateInboundProductApi inboundProductNo(final Long inboundProductNo) {
+        this.inboundProductNo = inboundProductNo;
+        return this;
+    }
+
+    public UpdateInboundProductApi productNo(final Long productNo) {
         this.productNo = productNo;
         return this;
     }
 
-    public AddInboundProductApi requestQuantity(final Long requestQuantity) {
+    public UpdateInboundProductApi requestQuantity(final Long requestQuantity) {
         this.requestQuantity = requestQuantity;
         return this;
     }
 
-    public AddInboundProductApi unitPrice(final Long unitPrice) {
+    public UpdateInboundProductApi unitPrice(final Long unitPrice) {
         this.unitPrice = unitPrice;
         return this;
     }
 
-    public AddInboundProductApi description(final String description) {
+    public UpdateInboundProductApi description(final String description) {
         this.description = description;
         return this;
     }
 
     public Scenario request() {
-
-        final AddInboundProduct.Request request = new AddInboundProduct.Request(
+        final UpdateInboundProduct.Request request = new UpdateInboundProduct.Request(
             productNo,
             requestQuantity,
             unitPrice,
@@ -53,9 +58,9 @@ public class AddInboundProductApi {
             .contentType(ContentType.JSON)
             .body(request)
             .when()
-            .post("/inbounds/{inboundNo}/products", inboundNo)
+            .patch("/inbounds/{inboundNo}/products/{inboundProductNo}", inboundNo, inboundProductNo)
             .then().log().all()
-            .statusCode(HttpStatus.CREATED.value());
+            .statusCode(HttpStatus.OK.value());
 
         return new Scenario();
     }

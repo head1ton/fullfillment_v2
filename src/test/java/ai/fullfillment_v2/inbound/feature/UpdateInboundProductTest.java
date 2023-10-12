@@ -1,47 +1,39 @@
 package ai.fullfillment_v2.inbound.feature;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import ai.fullfillment_v2.common.ApiTest;
+import ai.fullfillment_v2.common.Scenario;
+import ai.fullfillment_v2.inbound.domain.Inbound;
+import ai.fullfillment_v2.inbound.domain.InboundProduct;
+import ai.fullfillment_v2.inbound.domain.InboundRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
-public class UpdateInboundProductTest {
+public class UpdateInboundProductTest extends ApiTest {
 
-    private UpdateInboundProduct updateInboundProduct;
+    @Autowired
+    private InboundRepository inboundRepository;
 
     @BeforeEach
-    void setUp() {
-        updateInboundProduct = new UpdateInboundProduct();
+    void UpdateInboundProductSetUp() {
+        Scenario.createInbound().request();
     }
 
     @Test
     @DisplayName("입고 상품 수정.")
+    @Transactional
     public void updateInboundProduct() {
-        Long productNo = 1L;
-        Long requestQuantity = 1_000L;
-        Long unitPrice = 15_000L;
-        String description = "블랙핑크 입고 수정";
+        Scenario
+            .updateInboundProduct().request();
 
-        final UpdateInboundProduct.Request request = new UpdateInboundProduct.Request(
-            productNo,
-            requestQuantity,
-            unitPrice,
-            description
-        );
-        updateInboundProduct.request(request);
+        Inbound after = inboundRepository.findById(1L).get();
+        InboundProduct afterProduct = after.getInboundProducts().get(0);
+
+        assertThat(afterProduct.getDescription()).isEqualTo("블랙핑크 입고 수정");
     }
 
-    private class UpdateInboundProduct {
-
-        public void request(final Request request) {
-            throw new UnsupportedOperationException("Unsupported request");
-        }
-
-        public record Request(
-            Long productNo,
-            Long requestQuantity,
-            Long unitPrice,
-            String description) {
-
-        }
-    }
 }
