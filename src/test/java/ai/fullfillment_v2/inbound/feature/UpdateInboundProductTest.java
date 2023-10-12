@@ -16,13 +16,18 @@ public class UpdateInboundProductTest {
     @Test
     @DisplayName("입고 상품 수정.")
     public void updateInboundProduct() {
-        updateInboundProduct.request();
+        final UpdateInboundProduct.Request request = new UpdateInboundProduct.Request();
+        updateInboundProduct.request(request);
     }
 
     private class UpdateInboundProduct {
 
         public void request() {
             throw new UnsupportedOperationException("Unsupported request");
+        }
+
+        public record Request() {
+
         }
     }
 }
