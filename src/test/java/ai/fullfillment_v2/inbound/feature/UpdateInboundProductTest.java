@@ -16,17 +16,31 @@ public class UpdateInboundProductTest {
     @Test
     @DisplayName("입고 상품 수정.")
     public void updateInboundProduct() {
-        final UpdateInboundProduct.Request request = new UpdateInboundProduct.Request();
+        Long productNo = 1L;
+        Long requestQuantity = 1_000L;
+        Long unitPrice = 15_000L;
+        String description = "블랙핑크 입고 수정";
+
+        final UpdateInboundProduct.Request request = new UpdateInboundProduct.Request(
+            productNo,
+            requestQuantity,
+            unitPrice,
+            description
+        );
         updateInboundProduct.request(request);
     }
 
     private class UpdateInboundProduct {
 
-        public void request() {
+        public void request(final Request request) {
             throw new UnsupportedOperationException("Unsupported request");
         }
 
-        public record Request() {
+        public record Request(
+            Long productNo,
+            Long requestQuantity,
+            Long unitPrice,
+            String description) {
 
         }
     }
