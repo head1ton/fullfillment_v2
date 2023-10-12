@@ -8,7 +8,10 @@ public class UpdateInboundProductTest {
     @Test
     @DisplayName("입고 상품 수정.")
     public void updateInboundProduct() {
-
+        UpdateInboundProduct updateInboundProduct = new UpdateInboundProduct();
     }
 
+    private class UpdateInboundProduct {
+
+    }
 }
